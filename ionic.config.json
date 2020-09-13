@@ -1,0 +1,7 @@
+{
+  "name": "Futbolin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
