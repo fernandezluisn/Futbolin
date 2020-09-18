@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title style="text-shadow: 0.1rem 0.1rem 0.5rem #5cb85c;">BIENVENIDO A FUTBOLIN</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>  
+  <ion-row class="ion-align-items-stretch">
+    <ion-col>
+      <div>
+        <h3>
+          Ingrese aquí su correo electronico
+        </h3>
+        <ion-item>
+          
+          <ion-input type="text" [(ngModel)]="email"></ion-input>
+        </ion-item>
+        <h3>
+          Ingrese aquí su contraseña
+        </h3>
+        <ion-item>
+          
+          <ion-input type="password" [(ngModel)]="password"></ion-input>
+        </ion-item> 
+      </div>
+    </ion-col>
+    <ion-col>
+      <div class="radioB" *ngFor="let item of opciones">
+        <input type="radio" name="exampleRadios" id="exampleRadios1" value=item (change)="carg2(item)">
+        <label for="exampleRadios1">
+          {{item}}
+        </label>
+      </div>
+    </ion-col>
+    
+  </ion-row>
+
+
+  
+  
+<ion-item-divider>
+  <ion-button color="success" size="large" class="centrar" (click)="login()">Ingresar</ion-button>
+</ion-item-divider>
+
+<ion-avatar style="margin-top: 20%;"><img src="../assets/metegol.jpg" alt="18rem"></ion-avatar>
+</ion-content>
+
+
+
