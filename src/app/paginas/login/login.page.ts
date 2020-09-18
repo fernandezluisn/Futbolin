@@ -57,7 +57,7 @@ export class LoginPage implements OnInit {
       this.servicio.loginUser(this.email, this.password).then(res=>{
         this.router.navigate(['home']);
       }).catch(error=>{
-        this.alertar(error.message);      
+        this.alertar("Los datos ingresados no son correctos.");      
       });
     }else{
       this.alertar("El password debe tener más de 5 caracteres y el correo debe tener el formato correcto."); 
