@@ -1,9 +1,43 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>partido</ion-title>
-  </ion-toolbar>
-</ion-header>
+
 
 <ion-content>
 
+  <ion-item *ngIf="!hayP">
+    <ion-label>Jugador 1</ion-label>
+    <ion-select placeholder="Elija jugador 1" [(ngModel)]="j1">
+      <ion-select-option *ngFor="let usuario of usuarios" value="{{usuario.correo}}">{{usuario.correo}}</ion-select-option> 
+    </ion-select>
+  </ion-item>
+
+  <ion-item *ngIf="!hayP">
+    <ion-label>Jugador 2</ion-label>
+    <ion-select placeholder="Elija jugador 2" [(ngModel)]="j2">
+      <ion-select-option *ngFor="let usuario of usuarios" value="{{usuario.correo}}">{{usuario.correo}}</ion-select-option>      
+    </ion-select>
+  </ion-item>
+
+  <ion-item *ngIf="!hayP">
+    <ion-label>Fecha</ion-label>
+    <ion-datetime displayFormat="DD MM YY" placeholder="Ingrese fecha del encuentro" [(ngModel)]="fecha"></ion-datetime>
+  </ion-item>
+
+  <ion-item-divider *ngIf="!hayP">
+    <ion-button color="success" size="large" class="centrar" (click)="ingresar()">Agregar encuentro</ion-button>
+  </ion-item-divider>
+
+  <div class="container" *ngIf="hayP">
+    <h2>Partido en curso</h2>
+    <h4>{{partEnCurso.jugador1.nombre}} vs {{partEnCurso.jugador2.nombre}}</h4>
+    <h5>Resultado</h5>
+    <input type="number" name="" id="" style="width: 3rem;border-radius: 2rem; background: rgba(255, 255, 255, 0.411);">-<input type="number" name="" id="" style="width: 3rem; border-radius: 2rem; background: rgba(255, 255, 255, 0.411);"><br>
+    <ion-button icon-left color="light" (click)="tomarFoto()" style="width: 10rem;margin-top: 1rem;
+    margin-bottom: 1rem;"><ion-icon name="camera"></ion-icon>Sacar foto</ion-button>
+    <ion-button color="success" (click)="subirResultado()" style="width: 98%;">Subir resultado</ion-button>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button color="dark" (click)="cerrar()">Cerrar sesión</ion-button>
+  </ion-toolbar>
+</ion-footer>

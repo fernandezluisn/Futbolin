@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
 import { Usuario } from 'src/clases/usuario';
 import { AuthServiceService } from '../servicios/auth-service.service';
 import { BdaService } from '../servicios/bda.service';
@@ -19,8 +18,7 @@ export class HomePage {
   anda=false;
   loading
 
-  constructor(private bda:BdaService, private service:AuthServiceService, private router:Router, 
-    private loadingCtrl: LoadingController) {
+  constructor(private bda:BdaService, private service:AuthServiceService, private router:Router) {
     this.service.tomarUsuario().then(element=>
       {
         this.user=element;
@@ -29,13 +27,14 @@ export class HomePage {
           let listaO=this.ordenar(lista);
           this.listado=listaO;
 
-          lista.filter(elementF=>{
+          this.listado.filter(elementF=>{
             if(elementF.correo==this.user.email){
               this.usuarioLogeado=elementF;
               if(this.usuarioLogeado.perfil=="Admin"){
                 this.esAdmin=true;
+                this.anda=true;
               }
-              this.anda=true;
+              
             }
           })
         })
@@ -43,16 +42,17 @@ export class HomePage {
       );
   }
 
-  async presentLoading(message: string) {
-    this.loading = await this.loadingCtrl.create({
-        message,
-        spinner: "bubbles",
-        duration: 2500
-    });
-    return this.loading.present();
+  ngOnChanges(changeRecord) {
+    for (var change in changeRecord) {
+       console.log('changed: ' + change);
+    }
+ }
 
-    
+  cerrar(){
+    this.service.logOutUser();    
+    this.router.navigate(['login']);
   }
+  
 
   ordenar(lista){
     lista.sort(function (a, b) {
@@ -66,6 +66,18 @@ export class HomePage {
       return 0;
     });
     return lista;
+  }
+
+  crear(){
+    this.router.navigate(['partido']);
+  }
+
+  lista(){
+    this.router.navigate(['lista-partidos']);
+  }
+
+  ranking(){
+    this.router.navigate(['ranking']);
   }
 
 }

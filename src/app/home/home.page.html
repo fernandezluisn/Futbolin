@@ -1,15 +1,21 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content [fullscreen]="true">  
 
-  <ion-button *ngIf="esAdmin" size="large">Crear partido</ion-button>
-  <ion-button size="large">Ver lista de partidos</ion-button>
-  <ion-button size="large">Ver ranking</ion-button>
+  <ion-content [fullscreen]="true">  
 
-</ion-content>
+    <div *ngIf="esAdmin">
+      <ion-avatar style="margin-top: 3%;" (click)="crear()"><img src="../assets/partido.jpg" alt="18rem"></ion-avatar>
+      <h3 >Crear partido</h3>
+    </div>
+    <ion-avatar style="margin-top: 3%;" (click)="lista()"><img src="../assets/resultados.jpg" alt="18rem"></ion-avatar>
+    <h3>Ver lista de partidos</h3>
+    <ion-avatar style="margin-top: 3%;" (click)="ranking()"><img src="../assets/ranking.jpg" alt="18rem"></ion-avatar>
+    <h3>Ver ranking</h3>
+    
+
+  </ion-content>
+
+  <ion-footer>
+    <ion-toolbar>
+      <ion-button color="dark" (click)="cerrar()">Cerrar sesión</ion-button>
+    </ion-toolbar>
+  </ion-footer>

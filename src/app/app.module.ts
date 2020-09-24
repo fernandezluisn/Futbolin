@@ -13,6 +13,9 @@ import {AngularFireModule} from '@angular/fire';
 import {environment} from '../environments/environment';
 import {AngularFireAuth} from '@angular/fire/auth';
 
+import { DatePipe } from "@angular/common";
+
+import { Camera} from '@ionic-native/camera/ngx';
 
 
 import {AuthServiceService} from '../app/servicios/auth-service.service';
@@ -28,6 +31,8 @@ import {AuthServiceService} from '../app/servicios/auth-service.service';
     AngularFireAuth,
     SplashScreen,
     AuthServiceService,
+    DatePipe,
+    Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
