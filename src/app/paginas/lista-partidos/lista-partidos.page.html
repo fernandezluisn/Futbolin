@@ -1,9 +1,28 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>listaPartidos</ion-title>
+    <ion-title style="text-align: center;">Partidos</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-list *ngIf="partidos" >
+    <div class="container" *ngFor="let item of partidos">     
+      
+      
+    <h4>{{item.jugador1.nombre}} vs {{item.jugador2.nombre}}</h4>
+    <h5>Resultado</h5>
+    <h5>{{item.golesJug1}}-{{item.golesJug2}}</h5>
+    <h5>{{item.fecha}}</h5>
+    <img style="border: 0.2rem black solid; height: 5rem; margin-top: 1rem;" [src]="item.foto" *ngIf="item.foto" />
+      
+      
+     
+    </div>
+  </ion-list>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button color="dark" (click)="cerrar()">Cerrar sesión</ion-button>
+  </ion-toolbar>
+</ion-footer>

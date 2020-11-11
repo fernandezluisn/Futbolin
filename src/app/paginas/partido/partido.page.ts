@@ -8,6 +8,8 @@ import { isDefined } from '@angular/compiler/src/util';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AuthServiceService } from 'src/app/servicios/auth-service.service';
 import { Router } from '@angular/router';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-partido',
@@ -16,6 +18,8 @@ import { Router } from '@angular/router';
 })
 export class PartidoPage implements OnInit {
 
+  g1:number;
+  g2:number;
   j2;
   j1;
   usuarios:Usuario[];
@@ -24,22 +28,18 @@ export class PartidoPage implements OnInit {
   loading;
   hayP=false;
   partEnCurso:Partido;
+  image:string=null;
+  
 
- 
-
-  constructor(private bda:BdaService, private datePipe: DatePipe, private alertController:AlertController,
-    private loadingCtrl:LoadingController, private camera: Camera, private service:AuthServiceService, private router:Router) {
+  constructor(private storage:AngularFireStorage, private bda:BdaService, private datePipe: DatePipe, 
+    private alertController:AlertController, private loadingCtrl:LoadingController, private camera: Camera, 
+    private service:AuthServiceService, private router:Router) {
     this.bda.devolverListadoUsuarios().subscribe(lista=>{
       this.usuarios=lista;    
       this.bda.devolverListadoPartidos().subscribe(parts=>{
         this.partidos=parts;
       })  
-    })
-
-    let usu1=new Usuario(6, "pp", "", "", "Juan", "");
-    let usu2=new Usuario(6, "pp", "", "", "Jorge", "");
-    let part1=new Partido(usu1, usu2, "11-03-1990");
-    this.generarPartido(part1);
+    })    
   }
   
 
@@ -51,18 +51,19 @@ export class PartidoPage implements OnInit {
     this.router.navigate(['login']);
   }
 
-  tomarFoto(){
+  async tomarFoto(){
+    this.presentLoading("Cargando imagen");
     const options: CameraOptions = {
       quality: 100,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE
+      targetWidth: 1000,
+      targetHeight: 1000
     }
 
-    this.camera.getPicture(options).then((imageData) => {
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64 (DATA_URL):
-      let base64Image = 'data:image/jpeg;base64,' + imageData;
+    await this.camera.getPicture(options).then((imageData) => {
+      this.image = `data:image/jpeg;base64,${imageData}`;   
+        
      }, (err) => {
       this.alertar(err);
      });
@@ -95,7 +96,7 @@ export class PartidoPage implements OnInit {
     this.loading = await this.loadingCtrl.create({
         message,
         spinner: "dots",
-        duration: 2500
+        duration: 3500
     });
     return this.loading.present();    
   }
@@ -118,7 +119,7 @@ export class PartidoPage implements OnInit {
       {
         let part=new Partido(uno, dos, f);
         this.presentLoading("Cargando partido");
-        this.bda.createPartido(part); 
+         
         this.generarPartido(part);              
       }else{
         this.alertar("Los jugadores deben ser usuarios distintos");
@@ -131,8 +132,72 @@ export class PartidoPage implements OnInit {
     
   }
 
-  subirResultado(){
+  async subirResultado(){
+    if(this.g1+this.g2==7){
+        if(this.image){
+          this.presentLoading("Subiendo resultado");
     
+          try{
+          const com=this.fecha+Math.random()*1000+this.partEnCurso.jugador1.apellido+this.partEnCurso.jugador2.apellido;
+          let img;
+          await fetch(this.image)
+          .then(res => res.blob().then(r=>{
+            img=r
+          }))
+          
+          const file= img;
+          const path= com;
+          const ref=this.storage.ref(path);    
+          const task=this.storage.upload(path, file);     
+          task.snapshotChanges().pipe(finalize(()=>ref.getDownloadURL().subscribe(url=>{        
+            this.partEnCurso.foto=url;
+            this.partEnCurso.golesJug1=this.g1;
+            this.partEnCurso.golesJug2=this.g2;
+          this.bda.createPartido(this.partEnCurso);
+          let jug1=this.partEnCurso.jugador1;
+          let jug2=this.partEnCurso.jugador2;
+          if(this.g1>this.g2){
+            jug1.partidosGanados++;
+            jug2.partidosPerdidos++;
+            this.bda.actualizarUsuario(jug2);
+            this.bda.actualizarUsuario(jug1);
+          }else{
+            jug2.partidosGanados++;
+            jug1.partidosPerdidos++;
+            this.bda.actualizarUsuario(jug2);
+            this.bda.actualizarUsuario(jug1);
+          }
+          } ))).subscribe(); 
+          this.router.navigate(['lista-partidos']);
+          }catch(err){
+          this.alertar(err);
+          
+          }    
+        }else{
+          this.presentLoading("Subiendo resultado");
+          this.partEnCurso.golesJug1=this.g1;
+            this.partEnCurso.golesJug2=this.g2;
+          this.bda.createPartido(this.partEnCurso);
+          let jug1=this.partEnCurso.jugador1;
+          let jug2=this.partEnCurso.jugador2;
+          if(this.g1>this.g2){
+            jug1.partidosGanados++;
+            jug2.partidosPerdidos++;
+            this.bda.actualizarUsuario(jug2);
+            this.bda.actualizarUsuario(jug1);
+          }else{
+            jug2.partidosGanados++;
+            jug1.partidosPerdidos++;
+            this.bda.actualizarUsuario(jug2);
+            this.bda.actualizarUsuario(jug1);
+          }
+          this.router.navigate(['lista-partidos']);
+        }
+      }else{
+        this.alertar("El partido debe sumar 7 goles.");
+      }
+
   }
+    
 
 }

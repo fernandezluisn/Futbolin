@@ -1,9 +1,25 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>ranking</ion-title>
+    <ion-title style="text-align: center;">RANKING</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-list *ngIf="mejoresCinco" >
+    <div class="container" *ngFor="let item of mejoresCinco">      
+      
+      <h4>Usuari@: {{item.nombre}} {{item.apellido}}</h4>
+      <h5>Ganados: {{item.partidosGanados}}</h5>
+      <h5>Perdidos: {{item.partidosPerdidos}}</h5>
+      
+      
+     
+    </div>
+  </ion-list>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button color="dark" (click)="cerrar()">Cerrar sesión</ion-button>
+  </ion-toolbar>
+</ion-footer>

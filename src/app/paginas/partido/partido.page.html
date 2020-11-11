@@ -22,18 +22,21 @@
   </ion-item>
 
   <ion-item-divider *ngIf="!hayP">
-    <ion-button color="success" size="large" class="centrar" (click)="ingresar()">Agregar encuentro</ion-button>
+    <ion-button color="success" size="large" style="margin-left: 15%;" (click)="ingresar()">Agregar encuentro</ion-button>
   </ion-item-divider>
 
   <div class="container" *ngIf="hayP">
     <h2>Partido en curso</h2>
     <h4>{{partEnCurso.jugador1.nombre}} vs {{partEnCurso.jugador2.nombre}}</h4>
     <h5>Resultado</h5>
-    <input type="number" name="" id="" style="width: 3rem;border-radius: 2rem; background: rgba(255, 255, 255, 0.411);">-<input type="number" name="" id="" style="width: 3rem; border-radius: 2rem; background: rgba(255, 255, 255, 0.411);"><br>
+    <input type="number" [(ngModel)]="g1" style="width: 3rem;border-radius: 2rem; background: rgba(255, 255, 255, 0.411);">-<input type="number" [(ngModel)]="g2" style="width: 3rem; border-radius: 2rem; background: rgba(255, 255, 255, 0.411);"><br>
     <ion-button icon-left color="light" (click)="tomarFoto()" style="width: 10rem;margin-top: 1rem;
     margin-bottom: 1rem;"><ion-icon name="camera"></ion-icon>Sacar foto</ion-button>
     <ion-button color="success" (click)="subirResultado()" style="width: 98%;">Subir resultado</ion-button>
   </div>
+
+  <img style="border: 0.2rem black solid; height: 25rem; margin-left: 3rem; margin-top: 1rem;" [src]="image" *ngIf="image" />
+
 </ion-content>
 
 <ion-footer>
